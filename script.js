@@ -1,17 +1,21 @@
 "use strict";
 
-// Parte 1: use estes dados para criar workshopPrototype e suas instancias.
-const workshopData = [
-    { id: 1, title: "Objetos e prototipos", description: "Crie objetos reutilizaveis e compreenda a cadeia de prototipos.", level: "Intermediario", duration: 90, instructorId: 1 },
-    { id: 2, title: "Classes modernas", description: "Modele entidades com class, extends e super.", level: "Intermediario", duration: 75, instructorId: 2 },
-    { id: 3, title: "JavaScript no navegador", description: "Organize eventos e atualizacoes de uma interface.", level: "Iniciante", duration: 60, instructorId: 1 },
-    { id: 4, title: "Arquitetura frontend", description: "Separe dados, dominio e renderizacao em uma aplicacao.", level: "Avancado", duration: 105, instructorId: 3 }
+// =============================================
+// DADOS FORNECIDOS
+// =============================================
+const movieData = [
+    { id: 1, title: "A Origem", synopsis: "Um ladrão invade sonhos para plantar ideias.", genre: "Ficção", duration: 148, directorId: 1 },
+    { id: 2, title: "Interestelar", synopsis: "Exploradores viajam por um buraco de verme.", genre: "Ficção", duration: 169, directorId: 1 },
+    { id: 3, title: "Pulp Fiction", synopsis: "Histórias entrelaçadas em Los Angeles.", genre: "Crime", duration: 154, directorId: 2 },
+    { id: 4, title: "Cidade de Deus", synopsis: "O crescimento do crime no Rio de Janeiro.", genre: "Drama", duration: 130, directorId: 3 },
+    { id: 5, title: "O Auto da Compadecida", synopsis: "Dois amigos tentam sobreviver no sertão.", genre: "Comédia", duration: 104, directorId: 4 }
 ];
 
-const instructorData = [
-    { id: 1, name: "Ana Souza", specialty: "JavaScript" },
-    { id: 2, name: "Bruno Lima", specialty: "Arquitetura" },
-    { id: 3, name: "Carla Mendes", specialty: "Frontend" }
+const directorData = [
+    { id: 1, name: "Christopher Nolan", nationality: "Britânico" },
+    { id: 2, name: "Quentin Tarantino", nationality: "Americano" },
+    { id: 3, name: "Fernando Meirelles", nationality: "Brasileiro" },
+    { id: 4, name: "Guel Arraes", nationality: "Brasileiro" }
 ];
 
 const toastPrototype = {
@@ -25,144 +29,164 @@ const toastPrototype = {
     }
 };
 
-// Parte 1 - crie workshopPrototype, os workshops e as evidencias solicitadas.
-
-const workshopPrototype={
+// =============================================
+// PARTE 1 — comece aqui
+// =============================================
+// Q1: crie moviePrototype, dois filmes e demonstre
+const moviePrototype={
     getLabel(){
-        return `${this.title}-${this.level}`
-
+        return `${this.title}-${this.genre}`
     },
     isAvailable(){
         return this.available===true;
     }
-};
-const workshop1=Object.create(workshopPrototype);
-workshop1.title='Intro ao java';
-workshop1.level='Iniciante';
-workshop1.duration=60;
-workshop1.available=true;
-
-const workshop2=Object.create(workshopPrototype);
-workshop2.title='Intro ao java Avançado';
-workshop2.level='Intermediario';
-workshop2.duration=120;
-workshop2.available=false;
-
-console.log(Object.getPrototypeOf(workshop1)===workshopPrototype);
-console.log(Object.getPrototypeOf(workshop2)===workshopPrototype);
-
-console.log(Object.hasOwn(workshop1,'title')===true);
-console.log(Object.hasOwn(workshop1,'level')===true);
-console.log(Object.hasOwn(workshop1,'duration')===true);
-console.log(Object.hasOwn(workshop1,'available')===true);
-
-console.log(Object.hasOwn(workshop2,'title')===true);
-console.log(Object.hasOwn(workshop2,'level')===true);
-console.log(Object.hasOwn(workshop2,'duration')===true);
-console.log(Object.hasOwn(workshop2,'available')===true);
-
-
-console.log(Object.hasOwn(workshop1,'getLabel')===false)
-console.log(Object.hasOwn(workshop1,'isAvailable')===false)
-
-console.log(Object.hasOwn(workshop2,'getLabel')===false)
-console.log(Object.hasOwn(workshop2,'isAvailable')===false)
-
-workshopPrototype.enroll=function(){
-    if(!this.available){
-        console.log("Nao foi possivel inscrever o"+(this.title))
-    }
-    else{
-        console.log("Inscriçao feita!")
-    }
 }
+const movie1=Object.create(moviePrototype);
+movie1.title="Simplesmente acontece";
+movie1.genre="Romance";
+movie1.duration=90;
+movie1.available=true;
 
-workshop1.enroll();
-console.log(workshop1.available);
-workshop2.enroll();
-console.log(workshop2.available);
+const movie2=Object.create(moviePrototype);
+movie2.title="Harry potter";
+movie2.genre="Fantasia";
+movie2.duration=100;
+movie2.available=false;
 
-const schedule={
+console.log(Object.getPrototypeOf(movie1)===moviePrototype);
+console.log(Object.getPrototypeOf(Object.prototype));
+console.log(movie1.getLabel());
+console.log(Object.hasOwn(movie1,'title'));
+console.log(Object.hasOwn(movie1,'genre'));
+console.log(Object.hasOwn(movie1,'duration'));
+console.log(Object.hasOwn(movie1,'available'));
+
+console.log(Object.hasOwn(movie1,'getLabel'));
+console.log(Object.hasOwn(movie1,'isAvailable'));
+
+console.log(Object.getPrototypeOf(movie2)===moviePrototype);
+console.log(Object.getPrototypeOf(Object.prototype));
+console.log(movie2.getLabel());
+console.log(Object.hasOwn(movie2,'title'));
+console.log(Object.hasOwn(movie2,'getLabel'));
+
+moviePrototype.watch=function(){
+    if(!this.available){
+        console.log(`Nao foi possivel assistir:${this.title}`);
+        return;
+    }
+    this.available=false;
+    console.log(`voce assistiu:${this.title}`)
+}
+movie1.watch();
+console.log(movie1.available);
+movie2.watch();
+console.log(movie2.available);
+// Q2: crie marathon, cópias e restrições
+//Considere um objeto `marathon` com uma lista aninhada de filmes.
+
+1. Crie uma cópia rasa com spread e demonstre que uma alteração no item
+   aninhado também aparece no objeto original. (0,5 pt)
+2. Crie uma cópia profunda com `structuredClone()` ou alternativa documentada.
+   Demonstre a independência da lista aninhada e registre uma limitação da
+   técnica escolhida. (0,5 pt)
+3. Use `Object.freeze()`, `Object.seal()` e `Object.preventExtensions()`.
+   Para cada um, demonstre uma alteração permitida e uma operação impedida.
+   (1,0 pt)
+
+   const marathon={
     id:1,
-    title:"agenda do dia",
-    workshops:[
-        {id:1,title:"Objetos e prototipos", duration:90},
-        {id:2,title:"Classes modernas", duration:75}
+    title:"maratona de ficçao",
+    movies:[
+        {id:1,title:"A Origem",duration:148},
+        {id:2,title:"Interstelar",duration:169}
     ]
-};
-const shallowCopy={...schedule};
-shallowCopy.workshops[0].title="Titulo alterado";
+   };
 
-console.log("Original",schedule.workshops[0].title);
-console.log("Alterado",shallowCopy.workshops[0].title);
+   console.log("Original:",marathon.movies[0].title);
+   console.log("Original:",marathon.movies[1].title);
 
-const deepCopy=structuredClone(schedule);
+   const shallowCopy={...marathon};
+   shallowCopy.movies[0].title="Senhor dos aneis";
+   console.log("Original:",marathon.movies[0].title);
+   console.log("Copia:",shallowCopy.movies[0].title);
+   console.log("Pertencem ao mesmo array?",marathon.movies===shallowCopy.movies);
 
-deepCopy.workshops[0].title="Outro titulo qualquer";
-console.log("Original",schedule.workshops[0].title);
-console.log("Alterado",deepCopy.workshops[0].title);
+   shallowCopy.movies[1].title="Macacos";
+   console.log("Original:",marathon.movies[1].title);
+   console.log("Copia:",shallowCopy.movies[1].title);
+   console.log("Pertencem ao mesmo array?",marathon.movies===shallowCopy.movies);
 
-schedule.getTotal=function(){
-    return this.workshops.reduce((sum,w)=>sum+w.duration,0)
-};
-const deepCopy1=structuredClone(schedule);
-console.log(typeof deepCopy1.getTotal);
+   marathon.duracao=function(){
+    return this.movies.duration;
+   }
+   const deepCopy=structuredClone(marathon);
+   deepCopy.movies[0].title="Banana de pijamas";
+   console.log(marathon.movies[0].title);
 
-const frozen=Object.freeze({name:'congelado',value:10});
-frozen.value=99;
-frozen.nova='teste';
-delete frozen.name;
-console.log("frozen",frozen);
-
-const sealed=Object.seal({name:'selado',value:20});
+   console.log("Funçao no original:",marathon.duracao);
+   console.log("DeepCopy:",deepCopy.duracao);
 
 
-// Parte 2 - implemente Instructor, Workshop e WorkshopCatalog.
-// Os metodos devem ser definidos no prototipo das instancias.
 
-const state = { instructors: [], workshops: [], selectedInstructorId: "", term: "" };
-const instructorFilter = document.querySelector("#instructor-filter");
-const workshopFilter = document.querySelector("#workshop-filter");
+
+
+// =============================================
+// PARTE 2 — implemente as classes
+// =============================================
+// class Director { ... }
+// class Movie { ... }
+// class MovieCatalog { ... }
+
+// =============================================
+// ESTADO E SELETORES
+// =============================================
+const state = { directors: [], movies: [], selectedDirectorId: "", term: "", catalog: null };
+const directorFilter = document.querySelector("#director-filter");
+const movieFilter = document.querySelector("#movie-filter");
 const catalogStatus = document.querySelector("#catalog-status");
-const workshopList = document.querySelector("#workshop-list");
-const workshopDetail = document.querySelector("#workshop-detail");
+const movieList = document.querySelector("#movie-list");
+const movieDetail = document.querySelector("#movie-detail");
 const toast = Object.create(toastPrototype);
 
-function renderWorkshops() {
-    // TODO: use o catalogo, os filtros de state e renderize cards com botoes.
-    workshopList.innerHTML = '<p class="empty">Implemente a renderizacao das oficinas.</p>';
-    catalogStatus.textContent = "Aguardando implementacao";
+// =============================================
+// RENDERIZAÇÃO
+// =============================================
+function renderDirectors() {
+    // TODO
 }
 
-function renderInstructors() {
-    // TODO: transforme instructorData em Instructor e preencha o select.
-    instructorFilter.innerHTML = '<option value="">Todos os instrutores</option>';
+function renderMovies() {
+    // TODO
 }
 
-function showWorkshopDetail(workshopId) {
-    // TODO: encontre a oficina e mostre sua ementa no painel.
-    void workshopId;
-    workshopDetail.innerHTML = '<p class="empty">Implemente os detalhes da oficina.</p>';
+function showMovieDetail(movieId) {
+    // TODO
 }
 
+// =============================================
+// INICIALIZAÇÃO
+// =============================================
 function initialize() {
-    // TODO: crie as entidades, o catalogo e a primeira renderizacao.
-    catalogStatus.textContent = "Implemente a inicializacao do catalogo.";
+    // TODO
 }
 
-instructorFilter.addEventListener("change", () => {
-    state.selectedInstructorId = instructorFilter.value;
-    renderWorkshops();
+// =============================================
+// EVENTOS
+// =============================================
+directorFilter.addEventListener("change", () => {
+    state.selectedDirectorId = directorFilter.value;
+    renderMovies();
 });
 
-workshopFilter.addEventListener("input", () => {
-    state.term = workshopFilter.value;
-    renderWorkshops();
+movieFilter.addEventListener("input", () => {
+    state.term = movieFilter.value;
+    renderMovies();
 });
 
-workshopList.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-workshop-id]");
-    if (button) showWorkshopDetail(button.dataset.workshopId);
+movieList.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-movie-id]");
+    if (button) showMovieDetail(button.dataset.movieId);
 });
 
 initialize();
